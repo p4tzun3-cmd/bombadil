@@ -3,6 +3,7 @@
 	import Launcher from '../components/Launcher.svelte';
 	import Board from '../components/Board.svelte';
 	import ScoreBar from '../components/ScoreBar.svelte';
+	import QuestionOverlay from '../components/QuestionOverlay.svelte';
 </script>
 
 {#if app.game}
@@ -29,18 +30,11 @@
 			onselect={(question, ci, qi) => game.selectQuestion(question, ci, qi)}
 		/>
 
-	{:else if game.phase === 'QUESTION_ACTIVE'}
-		<div class="flex flex-col items-center justify-center h-screen gap-4" style:background-color="var(--color-overlay)">
-			<p class="text-4xl text-[var(--color-text)]">
-				{game.cycleStep}
-			</p>
-			<p class="text-xl text-[var(--color-text)] opacity-60">
-				Enter = weiter | Esc = zurück | 1-4 = Punkte
-			</p>
-			{#if app.currentRound}
-				<ScoreBar scores={game.scores} display={app.currentRound.settings.scoring.display} />
-			{/if}
-		</div>
+	{:else if game.phase === 'QUESTION_ACTIVE' && game.currentQuestion && game.cycleStep}
+		{#if app.currentRound}
+			<ScoreBar scores={game.scores} display={app.currentRound.settings.scoring.display} />
+		{/if}
+		<QuestionOverlay question={game.currentQuestion} cycleStep={game.cycleStep} />
 
 	{:else if game.phase === 'ROUND_END'}
 		<div class="flex flex-col items-center justify-center h-screen gap-4" style:background-color="var(--color-bg)">
