@@ -3,32 +3,21 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import { loadAllRounds } from '$lib/loader/loader';
 	import { loadTheme, applyThemeToDOM } from '$lib/theme/theme.svelte';
-	import { GameState } from '$lib/engine/state-machine.svelte';
-	import type { Round, ValidationError } from '$lib/engine/types';
+	import { app } from '$lib/stores/app.svelte';
 
 	let { children } = $props();
 
-	let rounds = $state<Round[]>([]);
-	let errors = $state<ValidationError[]>([]);
-	let game = $state<GameState | null>(null);
-	let loaded = $state(false);
-
 	$effect(() => {
 		loadAllRounds().then(async (result) => {
-			rounds = result.rounds;
-			errors = result.errors;
-
-			// Load theme from first round or fallback
-			const themeName = rounds[0]?.meta.theme;
+			const themeName = result.rounds[0]?.meta.theme;
 			const theme = await loadTheme(themeName);
 			applyThemeToDOM(theme);
-
-			game = new GameState(rounds[0]?.settings.teams ?? 4);
-			loaded = true;
+			app.init(result.rounds, result.errors);
 		});
 	});
 
 	function handleKeydown(e: KeyboardEvent) {
+		const game = app.game;
 		if (!game) return;
 
 		switch (e.key) {
@@ -45,7 +34,7 @@
 			case '1': case '2': case '3': case '4': {
 				const team = parseInt(e.key) - 1;
 				if (game.phase === 'QUESTION_ACTIVE' && game.cycleStep === 'SCORING') {
-					const round = rounds[game.currentRoundIndex];
+					const round = app.currentRound;
 					if (round && game.currentQuestion) {
 						const config = round.settings.scoring;
 						const pts = config.mode === 'fixed'
@@ -60,7 +49,7 @@
 				const teamMap: Record<string, number> = { q: 0, w: 1, e: 2, r: 3 };
 				const team = teamMap[e.key];
 				if (team !== undefined && game.phase === 'QUESTION_ACTIVE') {
-					const round = rounds[game.currentRoundIndex];
+					const round = app.currentRound;
 					if (round && game.currentQuestion) {
 						const config = round.settings.scoring;
 						const pts = config.mode === 'fixed'
@@ -84,8 +73,8 @@
 
 <svelte:window onkeydown={handleKeydown} />
 
-{#if loaded && game}
-	{@render children?.({ game, rounds, errors })}
+{#if app.loaded}
+	{@render children()}
 {:else}
 	<div class="flex items-center justify-center h-screen bg-[var(--color-bg)]">
 		<p class="text-2xl text-[var(--color-text)] animate-pulse">Lade Quiz...</p>
