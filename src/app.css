@@ -1,0 +1,30 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Theme colors — set dynamically from theme.json via JS */
+  --color-theme-bg: var(--color-bg, #1a1a2e);
+  --color-theme-card: var(--color-card, #16213e);
+  --color-theme-card-hover: var(--color-card-hover, #0f3460);
+  --color-theme-card-done: var(--color-card-done, transparent);
+  --color-theme-text: var(--color-text, #e0e0e0);
+  --color-theme-overlay: var(--color-overlay, #1a1a2e);
+  --color-theme-team-1: var(--color-team-1, #e74c3c);
+  --color-theme-team-2: var(--color-team-2, #2ecc71);
+  --color-theme-team-3: var(--color-team-3, #3498db);
+  --color-theme-team-4: var(--color-team-4, #f1c40f);
+
+  /* Font */
+  --font-main: var(--font-main, system-ui, -apple-system, sans-serif);
+}
+
+/* Global resets for beamer mode */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  cursor: var(--cursor, auto);
+  font-family: var(--font-main);
+  background: var(--color-bg, #1a1a2e);
+  color: var(--color-text, #e0e0e0);
+}
