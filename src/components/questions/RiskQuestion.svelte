@@ -10,7 +10,11 @@
 		cycleStep: CycleStep;
 	} = $props();
 
-	let wagerAmount = $state(question.wager.min);
+	let wagerAmount = $state(0);
+
+	$effect(() => {
+		wagerAmount = question.wager.min;
+	});
 </script>
 
 <div class="flex flex-col items-center justify-center h-full gap-6">
