@@ -4,6 +4,7 @@
 	import Board from '../components/Board.svelte';
 	import ScoreBar from '../components/ScoreBar.svelte';
 	import QuestionOverlay from '../components/QuestionOverlay.svelte';
+	import RoundEnd from '../components/RoundEnd.svelte';
 </script>
 
 {#if app.game}
@@ -13,9 +14,26 @@
 		<Launcher rounds={app.rounds} onselect={(i) => game.selectRound(i)} />
 
 	{:else if game.phase === 'INTRO'}
-		<div class="flex items-center justify-center h-screen" style:background-color="var(--color-bg)">
+		<div class="flex flex-col items-center justify-center h-screen gap-4"
+			style:background-color="var(--color-bg)">
+			{#if app.currentRound}
+				<h1 class="text-5xl font-bold" style:color="var(--color-text)">
+					{app.currentRound.meta.title}
+				</h1>
+				{#if app.currentRound.meta.subtitle}
+					<p class="text-2xl opacity-60" style:color="var(--color-text)">
+						{app.currentRound.meta.subtitle}
+					</p>
+				{/if}
+				{#if app.currentRound.meta.roundLabel}
+					<p class="text-xl opacity-40" style:color="var(--color-text)">
+						{app.currentRound.meta.roundLabel}
+					</p>
+				{/if}
+			{/if}
 			<button
-				class="text-3xl px-8 py-4 rounded-xl bg-[var(--color-card)] hover:bg-[var(--color-card-hover)] text-[var(--color-text)] cursor-pointer"
+				class="mt-8 text-3xl px-8 py-4 rounded-xl bg-[var(--color-card)] hover:bg-[var(--color-card-hover)] cursor-pointer"
+				style:color="var(--color-text)"
 				onclick={() => game.skipIntro()}
 			>
 				Start ▶
@@ -29,6 +47,15 @@
 			{game}
 			onselect={(question, ci, qi) => game.selectQuestion(question, ci, qi)}
 		/>
+		<!-- Runde beenden Button -->
+		<button
+			class="fixed bottom-4 right-4 z-50 px-4 py-2 rounded-lg text-sm opacity-40 hover:opacity-100
+				bg-[var(--color-card)] cursor-pointer transition-opacity"
+			style:color="var(--color-text)"
+			onclick={() => game.endRound()}
+		>
+			Runde beenden
+		</button>
 
 	{:else if game.phase === 'QUESTION_ACTIVE' && game.currentQuestion && game.cycleStep}
 		{#if app.currentRound}
@@ -36,15 +63,11 @@
 		{/if}
 		<QuestionOverlay question={game.currentQuestion} cycleStep={game.cycleStep} />
 
-	{:else if game.phase === 'ROUND_END'}
-		<div class="flex flex-col items-center justify-center h-screen gap-4" style:background-color="var(--color-bg)">
-			<p class="text-4xl text-[var(--color-text)]">Runde beendet</p>
-			<button
-				class="text-xl px-6 py-3 rounded-xl bg-[var(--color-card)] text-[var(--color-text)] cursor-pointer"
-				onclick={() => game.backToLauncher()}
-			>
-				Zurück zur Auswahl
-			</button>
-		</div>
+	{:else if game.phase === 'ROUND_END' && app.currentRound}
+		<RoundEnd
+			scores={game.scores}
+			display={app.currentRound.settings.scoring.display}
+			onback={() => game.backToLauncher()}
+		/>
 	{/if}
 {/if}
