@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
+	import { onMount } from 'svelte';
 	import { loadAllRounds } from '$lib/loader/loader';
 	import { loadTheme, applyThemeToDOM } from '$lib/theme/theme.svelte';
 	import { app } from '$lib/stores/app.svelte';
@@ -10,15 +11,18 @@
 
 	let { children } = $props();
 	let currentTheme = $state<Theme | null>(null);
+	let dismissed = $state(false);
+	let hasCriticalErrors = $derived(app.errors.some((e) => e.severity === 'error'));
+	let hasAnyErrors = $derived(app.errors.length > 0);
 
-	$effect(() => {
-		loadAllRounds().then(async (result) => {
+	onMount(async () => {
+		try {
+			const result = await loadAllRounds();
 			const themeName = result.rounds[0]?.meta.theme;
 			const theme = await loadTheme(themeName);
 			currentTheme = theme;
 			applyThemeToDOM(theme);
 
-			// Preload theme sounds
 			const sounds = theme.sounds;
 			if (sounds) {
 				const srcs = [sounds.think, sounds.risk, sounds.lucky].filter((s): s is string => !!s);
@@ -26,34 +30,26 @@
 			}
 
 			app.init(result.rounds, result.errors);
-		});
+		} catch (e) {
+			console.error('Failed to load quiz:', e);
+			app.init([], [{ catalog: 'system', field: 'loader', message: `Laden fehlgeschlagen: ${e}`, severity: 'error' }]);
+		}
 	});
 
-	// React to phase/question changes for audio triggers
+	// Audio triggers — react to game phase changes
 	let prevPhase = $state('');
 	$effect(() => {
 		const game = app.game;
 		if (!game) return;
 
 		if (game.phase === 'QUESTION_ACTIVE' && prevPhase !== 'QUESTION_ACTIVE') {
-			// Question opened — start think loop
-			if (currentTheme?.sounds?.think) {
-				playLoop(currentTheme.sounds.think);
-			}
-			// Type-specific sounds
-			if (game.currentQuestion?.type === 'risk' && currentTheme?.sounds?.risk) {
-				playSound(currentTheme.sounds.risk);
-			}
-			if (game.currentQuestion?.type === 'lucky' && currentTheme?.sounds?.lucky) {
-				playSound(currentTheme.sounds.lucky);
-			}
+			if (currentTheme?.sounds?.think) playLoop(currentTheme.sounds.think);
+			if (game.currentQuestion?.type === 'risk' && currentTheme?.sounds?.risk) playSound(currentTheme.sounds.risk);
+			if (game.currentQuestion?.type === 'lucky' && currentTheme?.sounds?.lucky) playSound(currentTheme.sounds.lucky);
 		}
-
 		if (prevPhase === 'QUESTION_ACTIVE' && game.phase !== 'QUESTION_ACTIVE') {
-			// Question closed — stop think loop
 			stopLoop();
 		}
-
 		prevPhase = game.phase;
 	});
 
