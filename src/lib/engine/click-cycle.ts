@@ -18,11 +18,12 @@ export function nextStep(
 	history: readonly CycleStep[]
 ): { step: CycleStep | null; history: CycleStep[] } {
 	const steps = CYCLES[type];
-	const idx = steps.indexOf(current);
+	const idx = (steps as readonly CycleStep[]).indexOf(current);
 	if (idx === -1 || idx >= steps.length - 1) {
 		return { step: null, history: [...history] };
 	}
-	const next = steps[idx + 1]!;
+	const next = steps[idx + 1];
+	if (!next) return { step: null, history: [...history] };
 	return { step: next, history: [...history, next] };
 }
 
@@ -33,5 +34,7 @@ export function previousStep(
 		return { step: null, history: [] };
 	}
 	const newHistory = history.slice(0, -1);
-	return { step: newHistory[newHistory.length - 1]!, history: newHistory };
+	const last = newHistory[newHistory.length - 1];
+	if (!last) return { step: null, history: [] };
+	return { step: last, history: newHistory };
 }

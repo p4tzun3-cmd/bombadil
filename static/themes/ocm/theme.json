@@ -1,0 +1,21 @@
+{
+	"name": "Oldenburger Computer-Museum",
+	"colors": {
+		"background": "#b6c840",
+		"card": "#ccdd66",
+		"cardHover": "#ddee77",
+		"cardDone": "transparent",
+		"text": "#1a1a1a",
+		"overlay": "#b6c840",
+		"teams": ["#cc0000", "#00aa00", "#0000cc", "#bbbb00"]
+	},
+	"logo": "/themes/ocm/logo.svg",
+	"backgroundImage": "/themes/ocm/bg.png",
+	"font": "'Work Sans', Verdana, Helvetica, sans-serif",
+	"cursorHidden": true,
+	"sounds": {
+		"think": "/themes/ocm/sounds/think.ogg",
+		"risk": "/themes/ocm/sounds/risiko.wav",
+		"lucky": "/themes/ocm/sounds/glueck.ogg"
+	}
+}

@@ -24,7 +24,10 @@ export function addScore(
 	points: number
 ): number[] {
 	const updated = [...scores];
-	updated[teamIndex] += points;
+	const current = updated[teamIndex];
+	if (current !== undefined) {
+		updated[teamIndex] = current + points;
+	}
 	return updated;
 }
 
@@ -34,6 +37,9 @@ export function subtractScore(
 	points: number
 ): number[] {
 	const updated = [...scores];
-	updated[teamIndex] -= points;
+	const current = updated[teamIndex];
+	if (current !== undefined) {
+		updated[teamIndex] = current - points;
+	}
 	return updated;
 }

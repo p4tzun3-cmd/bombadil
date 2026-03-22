@@ -1,0 +1,14 @@
+{
+	"name": "Default",
+	"colors": {
+		"background": "#1a1a2e",
+		"card": "#16213e",
+		"cardHover": "#0f3460",
+		"cardDone": "transparent",
+		"text": "#e0e0e0",
+		"overlay": "#1a1a2e",
+		"teams": ["#e74c3c", "#2ecc71", "#3498db", "#f1c40f"]
+	},
+	"font": "system-ui, -apple-system, sans-serif",
+	"cursorHidden": true
+}
