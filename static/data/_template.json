@@ -1,0 +1,31 @@
+{
+	"meta": {
+		"title": "[Quiz-Titel]",
+		"subtitle": "[Datum]",
+		"roundLabel": "Runde 1",
+		"theme": "default"
+	},
+	"settings": {
+		"teams": 4,
+		"scoring": {
+			"mode": "formula",
+			"baseScore": 100,
+			"multiplier": 1,
+			"display": "decimal"
+		},
+		"animations": true
+	},
+	"categories": [
+		{
+			"name": "[Kategorie]",
+			"questions": [
+				{
+					"type": "solution",
+					"difficulty": 1,
+					"media": { "type": "image", "src": "assets/img/[bild].jpg" },
+					"answer": { "text": "[Antwort]" }
+				}
+			]
+		}
+	]
+}

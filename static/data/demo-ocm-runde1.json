@@ -1,0 +1,120 @@
+{
+	"meta": {
+		"title": "OCM Demo-Quiz",
+		"subtitle": "Bombadil Testlauf",
+		"roundLabel": "Runde 1",
+		"theme": "ocm"
+	},
+	"settings": {
+		"teams": 4,
+		"scoring": {
+			"mode": "formula",
+			"baseScore": 128,
+			"multiplier": 1,
+			"display": "decimal"
+		},
+		"animations": true
+	},
+	"categories": [
+		{
+			"name": "Rechnerraten",
+			"questions": [
+				{
+					"type": "solution",
+					"difficulty": 1,
+					"media": { "type": "image", "src": "assets/img/placeholder.svg" },
+					"answer": { "text": "Commodore 64", "detail": "1982, über 17 Mio. verkauft" }
+				},
+				{
+					"type": "solution",
+					"difficulty": 2,
+					"media": { "type": "image", "src": "assets/img/placeholder.svg" },
+					"answer": { "text": "Atari 800XL", "detail": "1983" }
+				},
+				{
+					"type": "solution",
+					"difficulty": 3,
+					"media": { "type": "image", "src": "assets/img/placeholder.svg" },
+					"answer": { "text": "Sinclair ZX Spectrum", "detail": "1982" }
+				}
+			]
+		},
+		{
+			"name": "Wissen",
+			"questions": [
+				{
+					"type": "estimation",
+					"difficulty": 1,
+					"prompt": "In welchem Jahr wurde der Verein OCM gegründet?",
+					"answer": { "text": "2009" }
+				},
+				{
+					"type": "estimation",
+					"difficulty": 2,
+					"prompt": "Wie viele Exponate hat das OCM ungefähr?",
+					"answer": { "text": "Über 3.000", "detail": "Stand 2025" }
+				},
+				{
+					"type": "estimation",
+					"difficulty": 3,
+					"prompt": "Wie viel Stück wurden vom C64 verkauft?",
+					"answer": { "text": "17 Millionen" }
+				}
+			]
+		},
+		{
+			"name": "Risiko",
+			"questions": [
+				{
+					"type": "risk",
+					"difficulty": 1,
+					"media": { "type": "image", "src": "assets/img/placeholder.svg" },
+					"wager": { "min": 50, "max": 500 },
+					"answer": { "text": "Pong", "detail": "1972, Atari" }
+				},
+				{
+					"type": "lucky",
+					"difficulty": 2,
+					"media": { "type": "image", "src": "assets/img/placeholder.svg" },
+					"answer": { "text": "Space Invaders", "detail": "1978, Taito" }
+				},
+				{
+					"type": "risk",
+					"difficulty": 3,
+					"media": { "type": "image", "src": "assets/img/placeholder.svg" },
+					"wager": { "min": 100, "max": 1000 },
+					"answer": { "text": "Pac-Man", "detail": "1980, Namco" }
+				}
+			]
+		},
+		{
+			"name": "Multiple Choice",
+			"questions": [
+				{
+					"type": "multiplechoice",
+					"difficulty": 1,
+					"prompt": "Welcher Prozessor steckt im C64?",
+					"options": ["Zilog Z80", "MOS 6510", "Intel 8080", "Motorola 68000"],
+					"correctOption": 1,
+					"answer": { "text": "MOS 6510" }
+				},
+				{
+					"type": "multiplechoice",
+					"difficulty": 2,
+					"prompt": "Welche Firma entwickelte den Amiga?",
+					"options": ["Atari", "Apple", "Commodore", "IBM"],
+					"correctOption": 2,
+					"answer": { "text": "Commodore", "detail": "Amiga 1000, 1985" }
+				},
+				{
+					"type": "multiplechoice",
+					"difficulty": 3,
+					"prompt": "Wie hieß das erste kommerzielle Videospiel?",
+					"options": ["Pong", "Computer Space", "Spacewar!", "Tennis for Two"],
+					"correctOption": 1,
+					"answer": { "text": "Computer Space", "detail": "1971, Nutting Associates" }
+				}
+			]
+		}
+	]
+}
