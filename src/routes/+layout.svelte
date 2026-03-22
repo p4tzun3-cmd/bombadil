@@ -4,16 +4,56 @@
 	import { loadAllRounds } from '$lib/loader/loader';
 	import { loadTheme, applyThemeToDOM } from '$lib/theme/theme.svelte';
 	import { app } from '$lib/stores/app.svelte';
+	import { playLoop, stopLoop, stopAll, playSound, preloadAudio } from '$lib/audio/audio.svelte';
+	import type { Theme } from '$lib/engine/types';
 
 	let { children } = $props();
+	let currentTheme = $state<Theme | null>(null);
 
 	$effect(() => {
 		loadAllRounds().then(async (result) => {
 			const themeName = result.rounds[0]?.meta.theme;
 			const theme = await loadTheme(themeName);
+			currentTheme = theme;
 			applyThemeToDOM(theme);
+
+			// Preload theme sounds
+			const sounds = theme.sounds;
+			if (sounds) {
+				const srcs = [sounds.think, sounds.risk, sounds.lucky].filter((s): s is string => !!s);
+				preloadAudio(srcs);
+			}
+
 			app.init(result.rounds, result.errors);
 		});
+	});
+
+	// React to phase/question changes for audio triggers
+	let prevPhase = $state('');
+	$effect(() => {
+		const game = app.game;
+		if (!game) return;
+
+		if (game.phase === 'QUESTION_ACTIVE' && prevPhase !== 'QUESTION_ACTIVE') {
+			// Question opened — start think loop
+			if (currentTheme?.sounds?.think) {
+				playLoop(currentTheme.sounds.think);
+			}
+			// Type-specific sounds
+			if (game.currentQuestion?.type === 'risk' && currentTheme?.sounds?.risk) {
+				playSound(currentTheme.sounds.risk);
+			}
+			if (game.currentQuestion?.type === 'lucky' && currentTheme?.sounds?.lucky) {
+				playSound(currentTheme.sounds.lucky);
+			}
+		}
+
+		if (prevPhase === 'QUESTION_ACTIVE' && game.phase !== 'QUESTION_ACTIVE') {
+			// Question closed — stop think loop
+			stopLoop();
+		}
+
+		prevPhase = game.phase;
 	});
 
 	function handleKeydown(e: KeyboardEvent) {
@@ -28,7 +68,10 @@
 				if (game.phase === 'QUESTION_ACTIVE') game.retreatCycle();
 				break;
 			case ' ':
-				if (game.phase === 'INTRO' || game.phase === 'SUBINTRO') game.skipIntro();
+				if (game.phase === 'INTRO' || game.phase === 'SUBINTRO') {
+					game.skipIntro();
+					stopAll();
+				}
 				e.preventDefault();
 				break;
 			case '1': case '2': case '3': case '4': {
