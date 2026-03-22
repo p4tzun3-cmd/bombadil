@@ -6,6 +6,7 @@
 	import { app } from '$lib/stores/app.svelte';
 	import { playLoop, stopLoop, stopAll, playSound, preloadAudio } from '$lib/audio/audio.svelte';
 	import type { Theme } from '$lib/engine/types';
+	import ErrorScreen from '../components/ErrorScreen.svelte';
 
 	let { children } = $props();
 	let currentTheme = $state<Theme | null>(null);
@@ -116,10 +117,12 @@
 
 <svelte:window onkeydown={handleKeydown} />
 
-{#if app.loaded}
-	{@render children()}
-{:else}
+{#if !app.loaded}
 	<div class="flex items-center justify-center h-screen bg-[var(--color-bg)]">
 		<p class="text-2xl text-[var(--color-text)] animate-pulse">Lade Quiz...</p>
 	</div>
+{:else if (hasCriticalErrors || (hasAnyErrors && !dismissed))}
+	<ErrorScreen errors={app.errors} ondismiss={hasCriticalErrors ? undefined : () => dismissed = true} />
+{:else}
+	{@render children()}
 {/if}
