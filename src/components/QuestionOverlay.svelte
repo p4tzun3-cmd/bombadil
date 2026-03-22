@@ -1,6 +1,10 @@
 <script lang="ts">
 	import type { Question, CycleStep } from '$lib/engine/types';
 	import SolutionQuestion from './questions/SolutionQuestion.svelte';
+	import EstimationQuestion from './questions/EstimationQuestion.svelte';
+	import RiskQuestion from './questions/RiskQuestion.svelte';
+	import LuckyQuestion from './questions/LuckyQuestion.svelte';
+	import MultipleChoiceQuestion from './questions/MultipleChoiceQuestion.svelte';
 
 	let {
 		question,
@@ -16,21 +20,13 @@
 
 	{#if question.type === 'solution'}
 		<SolutionQuestion {question} {cycleStep} />
-
 	{:else if question.type === 'estimation'}
-		<!-- TODO Task 12 -->
-		<div class="text-4xl text-[var(--color-text)]">Estimation: {cycleStep}</div>
-
+		<EstimationQuestion {question} {cycleStep} />
 	{:else if question.type === 'risk'}
-		<!-- TODO Task 12 -->
-		<div class="text-4xl text-[var(--color-text)]">Risk: {cycleStep}</div>
-
+		<RiskQuestion {question} {cycleStep} />
 	{:else if question.type === 'lucky'}
-		<!-- TODO Task 12 -->
-		<div class="text-4xl text-[var(--color-text)]">Lucky: {cycleStep}</div>
-
+		<LuckyQuestion {question} {cycleStep} />
 	{:else if question.type === 'multiplechoice'}
-		<!-- TODO Task 12 -->
-		<div class="text-4xl text-[var(--color-text)]">Multiple Choice: {cycleStep}</div>
+		<MultipleChoiceQuestion {question} {cycleStep} />
 	{/if}
 </div>
